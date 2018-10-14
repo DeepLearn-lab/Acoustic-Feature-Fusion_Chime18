@@ -36,6 +36,9 @@ python feature_extraction.py
 The extracted features will get saved at Fe/ and Fe_eva/ folders.
 
 ## Training
+
+### Audio Tagging
+
 Training with defaut parameters works in the following way
 
 ```
@@ -43,13 +46,26 @@ python mainfile.py
 
 ```
 You can add your own module in `models.py`
+
+### Classification
+
+
 ## Evaluation
 
+### Audio Tagging
+
+```
+python eva-tagging.py
+```
+
+### Classification
+
+```
+python eva-classify.py
+
+```
+
 ## Visualizing Results
+![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/Results/loss.PNG)
 
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
