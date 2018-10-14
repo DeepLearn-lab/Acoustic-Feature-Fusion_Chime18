@@ -80,5 +80,4 @@ Techniques | DCASE | ROUEN (F1) | CHiME-Home |
 **EF+LF** | **88.70** | **98.25** | **14.0**
 
 ## License
-
-
+BSD
