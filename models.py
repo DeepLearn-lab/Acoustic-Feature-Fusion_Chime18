@@ -5,7 +5,6 @@ from keras.engine.topology import Layer
 from keras.layers.core import Reshape, Permute
 from keras.layers import Dropout, merge, Input, Dense, Flatten, Conv2D,GlobalAveragePooling2D, Concatenate,MaxPooling2D, GlobalMaxPooling2D,ZeroPadding2D,ZeroPadding1D
 K.set_image_dim_ordering('tf')
-
 shared = 1
 depth = 5
 attention = 1
@@ -16,31 +15,8 @@ For 2 Features call ensemble1 function
 for 3 features call ensemble function
  
 '''
-def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes,**kwargs):
+def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes):
 
-  input_neurons  = kwargs['kwargs'].get('input_neurons',100)
-  act1           = kwargs['kwargs'].get('act1','relu')
-  act2           = kwargs['kwargs'].get('act2','sigmoid')
-  act3           = kwargs['kwargs'].get('act3','softmax')
-  act4           = kwargs['kwargs'].get('act4','tanh')
-  nb_filter      = kwargs['kwargs'].get('nb_filter',200)
-  frame_size     = kwargs['kwargs'].get('frame_size',10)
-  filter_length  = kwargs['kwargs'].get('filter_length',3)
-  pool_size      = kwargs['kwargs'].get('pool_size',(1,1))
-  dropout        = kwargs['kwargs'].get('dropout',0.3)
-  reg            = kwargs['kwargs'].get('reg',0.005)
-  loss           = kwargs['kwargs'].get('loss','binary_crossentropy')
-  optimizer      = kwargs['kwargs'].get('optimizer','adam')
-  metrics        = kwargs['kwargs'].get('metrics','mse')
-
-  if type(filter_length) is int:
-    filter_length = [filter_length] * 2
-  
-  if act1==None or act2==None:
-    print "2 or 3 Activations Required"
-    return
-  print "Activation 1 {} 2 {} 3 {} ".format(act1,act2,act3)
-  print "Model CNN1"
   if attention:
     print 'with attention'
   else:
@@ -50,8 +26,8 @@ def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes,**kwargs):
   mul = MatchScore(inpx0,inpx1)
   mulT = Permute((2,1))(mul)
 
-  d1_1 = Dense(units = frame_size)(mul)
-  d2_1 = Dense(units = frame_size)(mulT)
+  d1_1 = Dense(units = 80)(mul)  #framesize = 80
+  d2_1 = Dense(units = 80)(mulT)
 
   x0 = Permute((2,1))(inpx0)
   x1 = Permute((2,1))(inpx1)
@@ -75,7 +51,6 @@ def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes,**kwargs):
 
   
   filter_len = [60,3]
-  input_neurons = 600
   filter_len_x = (filter_len[0],filter_len[1])
   filter_len_y = (filter_len[0],filter_len[1])
   depth = 6
@@ -83,7 +58,7 @@ def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes,**kwargs):
   for dep in range(depth):
 
     if shared:
-        conv = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation=act1,
+        conv = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation='relu',
                     data_format = 'channels_last',border_mode="valid")
         ques = conv(conv1)
         ans = conv(conv2)
@@ -92,30 +67,30 @@ def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes,**kwargs):
         print ans._keras_shape
         if depth<2:
             
-            conv_1 = Conv2D(nb_filter=128, kernel_size = filter_len_x, activation=act4,
+            conv_1 = Conv2D(nb_filter=128, kernel_size = filter_len_x, activation='tanh',
                         data_format = 'channels_last',border_mode="valid")
             ques_1 = conv_1(ques)
             ans_1 = conv_1(ans)
             
-            conv_2 = Conv2D(nb_filter=128, kernel_size = filter_len_x, activation=act4,
+            conv_2 = Conv2D(nb_filter=128, kernel_size = filter_len_x, activation='tanh',
                         data_format = 'channels_last',border_mode="valid")
             ques= conv_2(ques_1)
             ans= conv_2(ans_1)
         
 
     else:
-        ques = Conv2D(nb_filter=nb_filter, kernel_size = filter_len_x, activation=act4,
+        ques = Conv2D(nb_filter=128, kernel_size = filter_len_x, activation='tanh',
                 data_format = 'channels_last',border_mode="valid")(conv1)
-        ans = Conv2D(nb_filter, kernel_size = filter_len_y, activation=act4,
+        ans = Conv2D(nb_filter=128, kernel_size = filter_len_y, activation='tanh',
                 data_format="channels_last",border_mode="valid")(conv2)
 
 
-    ques = Dropout(dropout)(ques)
-    ans = Dropout(dropout)(ans)
+    ques = Dropout(0.3)(ques)
+    ans = Dropout(0.3)(ans)
     
 
-    conv1 = MaxPooling2D(pool_size)(ques)
-    conv2 = MaxPooling2D(pool_size)(ans)
+    conv1 = MaxPooling2D(pool_size = (1,1))(ques)
+    conv2 = MaxPooling2D(pool_size = (1,1))(ans)
 
     channel_1.append(GlobalAveragePooling2D()(ques))
     channel_2.append(GlobalAveragePooling2D()(ans))
@@ -135,39 +110,16 @@ def ensemble1(dimx0,dimx1,dimy0,dimy1,num_classes,**kwargs):
 
   h =  Concatenate(name='h')([h1, h2])
 
-  h = Dense(input_neurons,activation='relu',kernel_regularizer=regularizers.l2(reg))(h)
+  h = Dense(600,activation='relu',kernel_regularizer=regularizers.l2(0.005))(h)
   score = Dense(num_classes,activation='sigmoid',name='score')(h)
   model = Model(input=([inpx0, inpx1]),output= score)
   model.summary()
-  model.compile( loss= loss,optimizer= optimizer ,metrics=[metrics])
+  model.compile(loss= 'binary_crossentropy',optimizer= 'adam' ,metrics=['mse'])
 
   return model
 
-def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
-    
-    input_neurons  = kwargs['kwargs'].get('input_neurons',100)
-    act1           = kwargs['kwargs'].get('act1','relu')
-    act2           = kwargs['kwargs'].get('act2','sigmoid')
-    act3           = kwargs['kwargs'].get('act3','softmax')
-    act4           = kwargs['kwargs'].get('act4','tanh')
-    nb_filter      = kwargs['kwargs'].get('nb_filter',100)
-    frame_size     = kwargs['kwargs'].get('frame_size',80)
-    filter_length  = kwargs['kwargs'].get('filter_length',3)
-    pool_size      = kwargs['kwargs'].get('pool_size',(1,1))
-    dropout        = kwargs['kwargs'].get('dropout',0.3)
-    reg            = kwargs['kwargs'].get('reg',0.005)
-    loss           = kwargs['kwargs'].get('loss','binary_crossentropy')
-    optimizer      = kwargs['kwargs'].get('optimizer','adam')
-    metrics        = kwargs['kwargs'].get('metrics','mse')
-    
-    if type(filter_length) is int:
-        filter_length = [filter_length] * 2
-
-    if act1==None or act2==None:
-        print "2 or 3 Activations Required"
-        return
-    print "Activation 1 {} 2 {} 3 {} ".format(act1,act2,act3)
-    print "Model CNN1"
+def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes):
+        
     if attention:
         print 'with attention'
     else:
@@ -181,8 +133,8 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
     mul = MatchScore(x0,x1)
     mulT = Permute((2,1))(mul)
     
-    all_dense1 = Dense(units = frame_size)
-    all_dense2 = Dense(units = frame_size)
+    all_dense1 = Dense(units = 80) #framesize = 80
+    all_dense2 = Dense(units = 80)
     
     all_dense2 = all_dense1
 
@@ -218,7 +170,6 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
     channel_1, channel_2 ,channel_3 = [], [], []
     
     filter_len = [60,3]
-    input_neurons = 600
     filter_len_x = (filter_len[0],filter_len[1])
     filter_len_y = (filter_len[0],filter_len[1])
     filter_len_z = (filter_len[0],filter_len[1])
@@ -227,15 +178,14 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
     for dep in range(depth):
         
         if shared:
-            conv = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation=act4,
+            conv = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation='relu',
                         data_format = 'channels_last',border_mode="valid")           
             aud_f1 = conv(conv1)
             aud_f2 = conv(conv2)
             aud_f3 = conv(conv3)
             
             if depth<2:
-                print('Hello')
-                conv_1 = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation=act4,
+                conv_1 = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation='relu',
                         data_format = 'channels_last',border_mode="valid")           
                 aud_f1 = conv_1(aud_f1)
                 aud_f2 = conv_1(aud_f2)
@@ -245,7 +195,7 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
                 print(aud_f2._keras_shape)
                 print(aud_f3._keras_shape)
                 
-                conv_2 = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation=act4,
+                conv_2 = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation='relu',
                         data_format = 'channels_last',border_mode="valid")           
                 aud_f1 = conv_2(aud_f1)
                 aud_f2 = conv_2(aud_f2)
@@ -253,20 +203,20 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
                 
                 
         else:
-            aud_f1 = Conv2D(nb_filter=nb_filter, kernel_size = filter_len_x, activation=act4,
+            aud_f1 = Conv2D(nb_filter=256, kernel_size = filter_len_x, activation='relu',
                     data_format = 'channels_last',padding='same')(conv1)
-            aud_f2 = Conv2D(nb_filter=nb_filter, kernel_size = filter_len_y, activation=act4,
+            aud_f2 = Conv2D(nb_filter=256, kernel_size = filter_len_y, activation='relu',
                     data_format = 'channels_last',padding='same')(conv2)
-            aud_f3 = Conv2D(nb_filter=nb_filter, kernel_size = filter_len_z, activation=act4,
+            aud_f3 = Conv2D(nb_filter=256, kernel_size = filter_len_z, activation='relu',
                     data_format = 'channels_last',padding='same')(conv3)
             
-        aud_f1 = Dropout(dropout)(aud_f1)
-        aud_f2 = Dropout(dropout)(aud_f2)
-        aud_f3 = Dropout(dropout)(aud_f3)
+        aud_f1 = Dropout(0.3)(aud_f1)
+        aud_f2 = Dropout(0.3)(aud_f2)
+        aud_f3 = Dropout(0.3)(aud_f3)
      
-        conv1 = MaxPooling2D(pool_size)(aud_f1)
-        conv2 = MaxPooling2D(pool_size)(aud_f2)
-        conv3 = MaxPooling2D(pool_size)(aud_f3)
+        conv1 = MaxPooling2D(pool_size = (1,1))(aud_f1)
+        conv2 = MaxPooling2D(pool_size = (1,1))(aud_f2)
+        conv3 = MaxPooling2D(pool_size = (1,1))(aud_f3)
         
         
         channel_1.append(GlobalAveragePooling2D()(aud_f1))
@@ -289,10 +239,6 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
     if channel_3:
         h3 = merge([h3] + channel_3, mode="concat")
         
-    print (h1._keras_shape)
-    print (h2._keras_shape)
-    print (h3._keras_shape)
-        
     sim = Similarity(h1._keras_shape[1])
     
     sim1 = sim([h1,h2])
@@ -300,12 +246,12 @@ def ensemble(dimx0,dimx1,dimy0,dimy1,dimx2,dimy2,num_classes,**kwargs):
     
     h =  Concatenate(name='h')([h1, h2, h3, sim1, sim2])
     
-    h = Dense(input_neurons,activation='relu',kernel_regularizer=regularizers.l2(reg))(h)
+    h = Dense(600,activation='relu',kernel_regularizer=regularizers.l2(0.005))(h)
     score = Dense(num_classes,activation='sigmoid',name='score')(h)
     
     model = Model([inpx0, inpx1, inpx2],[score])
     model.summary()
-    model.compile( loss=loss,optimizer=optimizer,metrics=[metrics])
+    model.compile( loss='binary_crossentropy',optimizer='adam',metrics=['mse'])
 
     return model
 
