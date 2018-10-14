@@ -66,6 +66,23 @@ python eva-classify.py
 ```
 
 ## Visualizing Results
+ 
+
+The Training curves for vanilla model and proposed architecture,
+
 ![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/Results/loss.PNG)
+
+The training loss and Mean Squared Error(MSE) for the attention based system shows a steep decrease in the loss function as compared to the vanilla model.
+
+#### Performance of the proposed model on `Dcase`, `LITIS-Rouen` and `CHiME-Home`.
+
+Techniques | DCASE | ROUEN (F1) | CHiME-Home |
+--- | --- | --- | ---
+**Vanilla** | 85.50 | 96.85 | 15.6
+**EF** | 86.1 | 96.36 | 15.0
+**LF** | 87.00 | 96.80 | 14.6
+**EF+LF** | **88.70** | **98.25** | **14.0**
+
+## License
 
 
