@@ -24,6 +24,7 @@ This creates an environment named `kerasenv2` with all the dependencies installe
 
 
 ## Download the Dataset
+Download the [CHiME-Home](http://www.cs.tut.fi/sgn/arg/dcase2016/task-audio-tagging), [Acoustic Scene](http://www.cs.tut.fi/sgn/arg/dcase2016/task-acoustic-scene-classification) and [LITIS-Rouen](https://sites.google.com/site/alainrakotomamonjy/home/audio-scene) datasets and unzip the required datasets.
 
 ## Extracting Audio features
 
