@@ -36,7 +36,13 @@ python feature_extraction.py
 The extracted features will get saved at Fe/ and Fe_eva/ folders.
 
 ## Training
+Training with defaut parameters works in the following way
 
+```
+python mainfile.py
+
+```
+You can add your own module in `models.py`
 ## Evaluation
 
 ## Visualizing Results
