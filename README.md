@@ -37,7 +37,7 @@ The extracted features will get saved at Fe/ and Fe_eva/ folders.
 
 ## Training
 
-### Audio Tagging
+#### Audio Tagging
 
 Training with defaut parameters works in the following way
 
@@ -47,18 +47,18 @@ python mainfile.py
 ```
 You can add your own module in `models.py`
 
-### Classification
+#### Classification
 
 
 ## Evaluation
 
-### Audio Tagging
+#### Audio Tagging
 
 ```
 python eva-tagging.py
 ```
 
-### Classification
+#### Classification
 
 ```
 python eva-classify.py
