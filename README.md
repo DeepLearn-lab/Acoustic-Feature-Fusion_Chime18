@@ -51,13 +51,45 @@ You can add your own module in `models.py`
 #### Audio Tagging
 
 ```
-python eva-tagging.py
+y=[]
+y_pred_new = []
+class_eer=[]
+p_y_pred = lrmodel.predict([X0,X1,X2]) # probability, size: (n_block,label)
+
+for i in range(0,len(p_y_pred),12):
+    y_pred = np.mean(p_y_pred[i:i+12],axis=0)
+    y_pred_new.append(y_pred)
+    y.append(te_y2[i].tolist())
+y_pred_new, y = np.array(y_pred_new), np.array(y)
+print y_pred_new.shape
+print y.shape
+
+n_out = y.shape[1]
+print y_pred_new.shape
+print y.shape
+for k in xrange(n_out):
+    eer = EER(y[:, k],y_pred_new[:, k])
+    print "Class ",k,'ERR ',eer
+    class_eer.append(eer)
+    
+
+EER1=np.mean(class_eer)
+print("EER",EER1)
+
+Class  0 ERR  0.14377162629757783
+Class  1 ERR  0.20401913875598086
+Class  2 ERR  0.2398412698412699
+Class  3 ERR  0.12727272727272726
+Class  4 ERR  0.1588235294117647
+Class  5 ERR  0.06666666666666667
+Class  6 ERR  0.03994082840236687
+('EER', 0.14019082666405057)
 ```
 
 #### Classification
 
 ```
-python eva-classify.py
+
 
 ```
 
