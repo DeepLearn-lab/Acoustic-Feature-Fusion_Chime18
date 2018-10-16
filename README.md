@@ -2,11 +2,7 @@
 
 Code for the paper
 
-### Acoustic Scene Classification
-![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/architecture/abc.JPG)
-
-### Audio Tagging
-![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/architecture/tagging.png)
+![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/architecture/img.png)
 
 ## Setup and Dependencies
 Our code is implemented in Keras (v2.0.8 with CUDA). To setup, do the following:
@@ -84,5 +80,4 @@ Techniques | DCASE | ROUEN (F1) | CHiME-Home |
 **EF+LF** | **88.70** | **98.25** | **14.0**
 
 ## License
-
-
+BSD
