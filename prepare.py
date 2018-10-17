@@ -4,7 +4,9 @@ import numpy as np
 import cPickle
 import csv
 print("Loading prepare data")
-
+'''
+Fetching the feature values
+'''
 def feature1():
     fe_fd   =  cfg.fe_cqt_fd   # cqt
     fe_fd_e =  cfg.fe_eva_cqt_fd
@@ -32,6 +34,7 @@ def feature4():
     
 
 def get_dimension(feature):
+    # Given the demensions of the features
     
         return {
             "cqt"               :80,
@@ -64,6 +67,9 @@ def mat_2d_to_3d(X, agg_num, hop):
     return np.array(X3d)	
 
 def tGetAllData( fe_fd, eva_csv,agg_num, hop,fetur):
+    '''
+    Returns Training and Testing Data and Labels
+    '''
     with open( eva_csv, 'rb') as g:
         reader2 = csv.reader(g)
         lis2 = list(reader2)
@@ -76,7 +82,7 @@ def tGetAllData( fe_fd, eva_csv,agg_num, hop,fetur):
         na = li[1]            
         path = fe_fd + '/' + na + '.f'           
         info_path = cfg.label_csv + '/' + na + '.csv'
-        with open( info_path, 'rb') as g:
+        with open( info_path, 'rb') as g: #Read the Label file to point to the specific labels
             reader2 = csv.reader(g)
             lis2 = list(reader2)
             
@@ -103,6 +109,7 @@ def tGetAllData( fe_fd, eva_csv,agg_num, hop,fetur):
     return X3d_all, te_ylist
 
 def GetTags( info_path, path):
+    # Returns the tags associated with each audio
     with open( info_path, 'rb') as f:
         reader = csv.reader(f)
         lis = list(reader)

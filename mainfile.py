@@ -10,8 +10,10 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint,TensorBoard
 import os
 import tensorflow as tf
 import prepare as p
+# Select the GPU Device for the current code
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID" 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+# Allocating some fraction of memory to the code for memory utilization
 import keras.backend.tensorflow_backend as KTF
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.1)
 sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
@@ -21,6 +23,7 @@ print('imported')
 num_classes=len(cfg.labels)
 from sklearn import metrics
 
+# Intializing variables 
 n1          = [0,0,0]
 fe_fd       = [0,0,0]
 fe_fd_e     = [0,0,0]
@@ -33,10 +36,11 @@ te_y        = [0,0,0]
 
 i=-1 #Init with 0 indexing
 for fetur in cfg.feature:
+    # Fetching training and testing data of all the features sequentially
     print fetur
     i+=1
     n1[i] = p.get_dimension(fetur)
-    fe_fd[i],fe_fd_e[i],text[i]=p.get_feature(fetur)
+    fe_fd[i],fe_fd_e[i],text[i]=p.get_feature(fetur)  # fetching the features
     tr_X[i], tr_y[i] = p.tGetAllData( fe_fd[i], cfg.meta_train_csv, cfg.agg_num, cfg.hop ,fetur)
     te_X[i],te_y[i] = p.tGetAllData( fe_fd_e[i], cfg.meta_test_csv, cfg.agg_num, cfg.hop ,fetur)
     
@@ -58,7 +62,7 @@ X1=te_X1
 X2=te_X2
 
 '''
-1. Reshaped first dimension of the array for mapping to happen correctly between each feature.
+1. Reshaped first dimension of the array to accordingly map feature frame.
 2. Reshaped last dimension of the array for every feature to have same frame size for the model 
    to concatenate over the feature axis to generate an array of shape (15,15) // (agg_num,agg_num) 
 '''
@@ -158,7 +162,13 @@ lrmodel.fit([tr_X0,tr_X1,tr_X2],tr_y2,batch_size=100,epochs=20,verbose=2,
 
 lrmodel.save('model.h5')
 
+'''
+Evaluation Script
+
+'''
+
 def EER(gt,pred):
+    # Input : Ground Truth and the predicted values
     fpr, tpr, thresholds = metrics.roc_curve(gt, pred, drop_intermediate=True)
     eps = 1E-6
     Points = [(0,0)]+zip(fpr, tpr)
@@ -179,6 +189,9 @@ def EER(gt,pred):
  
 '''
 def prediction(y_pred):
+    # Now we don't need this funcation because of this statement 'np.mean(p_y_pred[i:i+12],axis=0)'
+    #As, we have broken down our clips into frames and augmented the training batch size. This function helps
+    #us to find the maximum values in between those 12 rows and combine them back to form a single row of maximum values. 
     temp=[0]*8
     thres0 = 0.008
     thres1 = 7
@@ -215,7 +228,7 @@ print y.shape
 for k in xrange(n_out):
     eer = EER(y[:, k],y_pred_new[:, k])
     print "Class ",k,'ERR ',eer
-    class_eer.append(eer)
+    class_eer.append(eer) #Showing Classwise EER
     
 
 EER1=np.mean(class_eer)

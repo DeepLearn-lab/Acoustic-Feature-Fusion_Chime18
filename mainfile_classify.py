@@ -36,6 +36,7 @@ te_y        = [0,0,0]
 
 i=-1 #Init with 0 indexing
 for fetur in cfg.feature:
+     # Fetching training and testing data of all the features sequentially
     print fetur
     i+=1
     n1[i] = p.get_dimension(fetur)
@@ -61,18 +62,18 @@ X1=te_X1
 X2=te_X2
 
 '''
-1. Reshaped first dimension of the array for mapping to happen correctly between each feature.
+1. Reshaped first dimension of the array to accordingly map feature frame.
 2. Reshaped last dimension of the array for every feature to have same frame size for the model 
    to concatenate over the feature axis to generate an array of shape (15,15) // (agg_num,agg_num) 
 '''
-new_trX0=np.zeros([301860, 1, 10, 40])
+new_trX0=np.zeros([301860,10, 40,1])
 j=0
 for i in range(len(tr_X0)):
     new_trX0[j]=tr_X0[i]
     new_trX0[j+1]=tr_X0[i]
     j+=2
 
-new_trX2=np.zeros([301860, 1, 10, 60])
+new_trX2=np.zeros([301860,10, 60, 1])
 j=0
 for i in range(len(tr_X2)):
     new_trX2[j]=tr_X2[i]
@@ -83,14 +84,14 @@ tr_X0=new_trX0
 tr_X2=new_trX2
 
 ## testing
-new_teX0=np.zeros([258, 1, 10, 40])
+new_teX0=np.zeros([258,10, 40, 1])
 j=0
 for i in range(len(X0)):
     new_teX0[j]=X0[i]
     new_teX0[j+1]=X0[i]
     j+=2
 
-new_teX2=np.zeros([258, 1, 10, 60])
+new_teX2=np.zeros([258, 10, 60, 1])
 j=0
 for i in range(len(X2)):
     new_teX2[j]=X2[i]
@@ -100,12 +101,12 @@ for i in range(len(X2)):
 X0=new_teX0
 X2=new_teX2
 
-dimx0=tr_X0.shape[-2]
-dimx1=tr_X1.shape[-2]
-dimx2=tr_X2.shape[-2]
-dimy0=tr_X0.shape[-1]
-dimy1=tr_X1.shape[-1]
-dimy2=tr_X2.shape[-1]
+dimx0=tr_X0.shape[-3]
+dimx1=tr_X1.shape[-3]
+dimx2=tr_X2.shape[-3]
+dimy0=tr_X0.shape[-2]
+dimy1=tr_X1.shape[-2]
+dimy2=tr_X2.shape[-2]
 
 
 
@@ -119,8 +120,9 @@ lrmodel.fit([tr_X0,tr_X1,tr_X2],tr_y2,batch_size=150,epochs=20,verbose=2,
 
 lrmodel.save('model.h5')
 
-
-
+'''
+Evaluation Script
+'''
 
 y=[]
 y_pred_new = []
@@ -137,7 +139,7 @@ print y.shape
 
 
 preds = np.argmax( y_pred_new, axis=-1 )     # size: (n_block)
-b = scipy.stats.mode(preds)
+b = scipy.stats.mode(preds)  # Finding the maximum value out of the array for predicting the label
 pred = int( b[0] )
 truth = open(cfg.eval_txt,'r').readlines()
 pred.sort()
@@ -153,8 +155,6 @@ for i in val:
         print i
 
 print '\n\n'
-U.eval_performance(truth,pred)
-
 pos,neg=0,0 
 for i in range(0,len(pred)):
     if pred[i] == truth[i]:

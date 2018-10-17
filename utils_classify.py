@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+'''
+config file to store the variable path and values for Classification task
+'''
+
 a='/akshitadatae6'
 b='/akshitadatae9'
 c='/akshitadatae2'

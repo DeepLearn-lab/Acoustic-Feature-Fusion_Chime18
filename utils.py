@@ -1,4 +1,7 @@
 #Imports
+'''
+config file to store the variable path and values for tagging task
+'''
 
 fe_cqt_fd 			 = 'Fe/cqt' #2
 fe_logmel_kong_fd 	 = 'Fe/logmel_kong'#4
