@@ -22,7 +22,11 @@ This creates an environment named `kerasenv2` with all the dependencies installe
 ## Download the Dataset
 Download the [CHiME-Home](http://www.cs.tut.fi/sgn/arg/dcase2016/task-audio-tagging), [Acoustic Scene](http://www.cs.tut.fi/sgn/arg/dcase2016/task-acoustic-scene-classification) and [LITIS-Rouen](https://sites.google.com/site/alainrakotomamonjy/home/audio-scene) datasets and unzip the required datasets.
 
-## Extracting Audio features
+## Code Usage
+
+In the following steps I am going to show how to run the code on the given dataset. (This is what you would need to do for your own audio classification and tagging dataset as well.) The scripts that I am going to mention in each step, please open them and see if you need to the paths.
+
+### Extracting Audio features
 To extract audio features, run the following:
 
 ```
@@ -31,24 +35,24 @@ python feature_extraction.py
 ```
 The extracted features will get saved at Fe/ and Fe_eva/ folders.
 
-## Training
-
-#### Audio Tagging
+### Training
 
 Training with defaut parameters works in the following way
 
 ```
-python mainfile.py
+1. Audio Tagging
+- python mainfile.py
+
+2. Classification
+- python mainfile_classify.py
 
 ```
+
 You can add your own module in `models.py`
 
-#### Classification
+### Evaluation
 
-
-## Evaluation
-
-#### Audio Tagging
+1. Audio Tagging
 
 ```
 y=[]
@@ -86,14 +90,14 @@ Class  6 ERR  0.03994082840236687
 ('EER', 0.14019082666405057)
 ```
 
-#### Classification
+2. Classification
 
 ```
 
 
 ```
 
-## Visualizing Results
+### Visualizing Results
  
 
 The Training curves for vanilla model and proposed architecture,
