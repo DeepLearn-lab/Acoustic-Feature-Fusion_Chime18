@@ -26,7 +26,7 @@ Download the [CHiME-Home](http://www.cs.tut.fi/sgn/arg/dcase2016/task-audio-tagg
 
 In the following steps I am going to show how to run the code on the given dataset. (This is what you would need to do for your own audio classification and tagging dataset as well.) The scripts that I am going to mention in each step, please open them and see if you need to the paths.
 
-### Extracting Audio features
+## Extracting Audio features
 To extract audio features, run the following:
 
 ```
@@ -35,7 +35,7 @@ python feature_extraction.py
 ```
 The extracted features will get saved at Fe/ and Fe_eva/ folders.
 
-### Training
+## Training
 
 Training with defaut parameters works in the following way
 
@@ -50,7 +50,7 @@ Training with defaut parameters works in the following way
 
 You can add your own module in `models.py`
 
-### Evaluation
+## Evaluation
 
 1. Audio Tagging
 
@@ -131,7 +131,7 @@ acc=(float(pos)/float(len(pred)))*100
 
 ```
 
-### Visualizing Results
+## Visualizing Results
  
 
 We have integrated Tensorboard_logger to visualize training and mean squared error. To install tensorboard logger use :
