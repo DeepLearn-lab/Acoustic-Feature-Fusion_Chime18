@@ -93,7 +93,41 @@ Class  6 ERR  0.03994082840236687
 2. Classification
 
 ```
+y=[]
+y_pred_new = []
+p_y_pred = lrmodel.predict([X0,X1,X2]) # probability, size: (n_block,label)
+for i in range(0,len(p_y_pred),258):
+    y_pred = np.mean(p_y_pred[i:i+258],axis=0)
+    y_pred_new.append(y_pred)
+    y.append(te_y2[i].tolist())
+y_pred_new, y = np.array(y_pred_new), np.array(y)
+preds = np.argmax( y_pred_new, axis=-1 )     # size: (n_block)
+b = scipy.stats.mode(preds)  # Finding the maximum value out of the array for predicting the label
+pred = int( b[0] )
+truth = open(cfg.eval_txt,'r').readlines()
+pred.sort()
+truth.sort()
+pred = [i.split('\t')[1].split('\n')[0]for i in pred]
+truth = [i.split('\t')[1]for i in truth]
+met = metrics.classification_report(truth,pred)
+val = met.split('\n')
+print '\n\n'
+for i in val:
+    if len(i)>0:
+        print i
+print '\n\n'
+pos,neg=0,0 
+for i in range(0,len(pred)):
+    if pred[i] == truth[i]:
+        pos = pos+1
+    else:
+        neg = neg+1
+print "\n\n ********************* Accuracy ********************* \n"
 
+print "correctly classified     --> ",pos
+print "not correctly classified -->",neg
+print "percentage(%) accuracy   --> ",(float(pos)/float(len(pred)))*100
+acc=(float(pos)/float(len(pred)))*100
 
 ```
 
