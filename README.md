@@ -139,7 +139,7 @@ We have integrated Tensorboard_logger to visualize training and mean squared err
 pip install tensorboard_logger
 ```
 
-The Training curves for vanilla model and proposed architecture,
+The Training curves for vanilla model and proposed architecture for Tagging Task,
 
 ![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/Results/loss.PNG)
 
