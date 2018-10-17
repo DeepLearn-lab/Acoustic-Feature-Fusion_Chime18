@@ -100,6 +100,11 @@ Class  6 ERR  0.03994082840236687
 ### Visualizing Results
  
 
+We have integrated Tensorboard_logger to visualize training and mean squared error. To install tensorboard logger use :
+```
+pip install tensorboard_logger
+```
+
 The Training curves for vanilla model and proposed architecture,
 
 ![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/Results/loss.PNG)
