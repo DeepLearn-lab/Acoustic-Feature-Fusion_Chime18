@@ -154,5 +154,9 @@ Techniques | DCASE | ROUEN (F1) | CHiME-Home |
 **LF** | 87.00 | 96.80 | 14.6
 **EF+LF** | **88.70** | **98.25** | **14.0**
 
+## Contributors
+
+[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/0)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/0)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/1)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/1)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/2)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/2)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/3)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/3)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/4)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/4)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/5)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/5)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/6)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/6)[![](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/images/7)](https://sourcerer.io/fame/akshitac8/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/links/7)
+
 ## License
 BSD
