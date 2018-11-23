@@ -1,6 +1,6 @@
 ## Acoustic-Feature-Fusion @Chime18
 
-Code for the paper accepted at <b>Interspeech-Chime' 2018</b>
+Code for the [paper](https://www.isca-speech.org/archive/CHiME_2018/abstracts/CHiME_2018_paper_bhatt.html) accepted at <b>Interspeech-Chime' 2018</b>
 
 ![](https://github.com/DeepLearn-lab/Acoustic-Feature-Fusion_Chime18/blob/master/architecture/img.png)
 
